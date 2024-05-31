@@ -87,6 +87,12 @@
 		    <version>0.12.5</version>
 		    <scope>runtime</scope>
 		</dependency>
+		
+		<!-- spring security 를 사용하기 위한 의존 설정 추가-->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
 
 	</dependencies>
 
