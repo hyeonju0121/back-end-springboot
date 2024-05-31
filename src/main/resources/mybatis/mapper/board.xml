@@ -51,7 +51,13 @@
    <!-- ################################################################################## -->
    
    <update id="updateByBno" parameterType="board">
-      update board set btitle=#{btitle}, bcontent=#{bcontent}
+      update board set 
+      	btitle=#{btitle}, bcontent=#{bcontent}
+      	<if test="battachoname != null">
+      		, battachoname=#{battachoname}
+      		, battachtype=#{battachtype}
+      		, battachdata=#{battachdata}
+      	</if>
       where bno=#{bno}
    </update>
    
