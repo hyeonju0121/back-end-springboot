@@ -3,7 +3,7 @@
 <mapper namespace="com.mycompany.webapp.dao.MemberDao">
    <insert id="insert" parameterType="Member">
       insert into member(mid, mname, mpassword, menabled, mrole, memail)
-      values (#{mid}, #{mname}, #{mpassword}, 1, 'ROLE_USER', #{memail})
+      values (#{mid}, #{mname}, #{mpassword}, #{menabled}, #{mrole}, #{memail})
    </insert>
    
    <select id="selectByMid" parameterType="String" resultType="Member">
