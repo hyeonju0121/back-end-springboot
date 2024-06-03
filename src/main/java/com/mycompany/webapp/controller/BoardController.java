@@ -10,6 +10,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +37,7 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;
 
+
 	@GetMapping("/list")
 	public Map<String, Object> list(@RequestParam(defaultValue = "1") int pageNo) {
 		// 페이징 대상이 되는 전체 행수 얻기
@@ -53,8 +57,10 @@ public class BoardController {
 	/**
 	 * 게시물 생성
 	 */
+	// @Secured("ROLE_USER") => 스프링 2.7과 3.x 에서 동작하지 않음
+	@PreAuthorize("hasAuthority('ROLE_USER')") 
 	@PostMapping("/create")
-	public Board create(Board board) {
+	public Board create(Board board, Authentication authentication) {
 		// 첨부가 넘어왔을 경우 처리
 		if (board.getBattach() != null && !board.getBattach().isEmpty()) {
 			MultipartFile mf = board.getBattach();
@@ -70,7 +76,9 @@ public class BoardController {
 		}
 
 		// Board 객체 DB에 저장
-		board.setBwriter("user");
+		// 로그인한 사용자의 아이디 설정 
+//		board.setBwriter("user");
+		board.setBwriter(authentication.getName()); // 로그인한 사용자의 아이디 가져오기 
 		boardService.insert(board);
 
 		// JSON 으로 변환되지 않는 필드는 NULL 처리
@@ -97,6 +105,7 @@ public class BoardController {
 	}
 
 	// 게시물 수정
+	@PreAuthorize("hasAuthority('ROLE_USER')")
 	@PutMapping("/update")
 	public Board update(Board board) {
 		// 첨부가 넘어왔을 경우 처리
@@ -125,6 +134,7 @@ public class BoardController {
 	}
 
 	// 게시물 단건 삭제
+	@PreAuthorize("hasAuthority('ROLE_USER')")
 	@DeleteMapping("/delete/{bno}")
 	public void delete(@PathVariable int bno) {
 		boardService.delete(bno);

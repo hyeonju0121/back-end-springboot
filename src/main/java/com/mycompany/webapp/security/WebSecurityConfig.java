@@ -3,6 +3,8 @@ package com.mycompany.webapp.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -59,12 +61,20 @@ public class WebSecurityConfig {
 
 	// 권한 계층을 관리 객체로 등록
 	@Bean
-	public RoleHierarchy roleHireHierarchy() {
+	public RoleHierarchy roleHierarchy() {
 		RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
 		hierarchy.setHierarchy("ROLE_ADMIN > ROLE_MANAGER > ROLE_USER");
 
 		return hierarchy;
 	}
+	
+	// @PreAuthorize 어노테이션의 표현식을 해석하는 객체 등록 
+	@Bean
+    public MethodSecurityExpressionHandler createExpressionHandler() {
+      DefaultMethodSecurityExpressionHandler handler = new DefaultMethodSecurityExpressionHandler();
+        handler.setRoleHierarchy(roleHierarchy());
+        return handler;
+    }
 
 	// 다른 도메인(크로스 도메인) 제한 설정 (모든 도메인을 허용하지는 않음)
 	@Bean
