@@ -1,3 +1,4 @@
+
 package com.mycompany.webapp.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,7 +97,7 @@ public class WebSecurityConfig {
 
 		// 모든 URL에 대해 위 설정 내용 적용
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/", configuration);
+		source.registerCorsConfiguration("/**", configuration);  // "/**": 모든 URL에 대해서 configuartion을 적용
 
 		return source;
 	}

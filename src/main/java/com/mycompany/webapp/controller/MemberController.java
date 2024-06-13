@@ -38,10 +38,10 @@ public class MemberController {
 	private MemberService memberService;
 
 	@PostMapping("/login")
-	public Map<String, String> userLogin(String userId, String userPassword) {
+	public Map<String, String> userLogin(String mid, String mpassword) {
 
 		// DB에서 사용자 상세 정보 얻기
-		AppUserDetails userDetails = (AppUserDetails) userDetailsService.loadUserByUsername(userId);
+		AppUserDetails userDetails = (AppUserDetails) userDetailsService.loadUserByUsername(mid);
 
 		// 비밀번호 검사
 		// 스프링은 기본적으로 DelegatingPasswordEncoder 암호화 방식을 사용함
@@ -52,7 +52,7 @@ public class MemberController {
 		// 패스워드와 DB에 저장되어 있는 패스워드 비교
 		// appUserDetails.getMember().getMpassword() -> 실제 db에 저장된 암호화된 패스워드 반환
 		boolean checkResult = passwordEncoder.matches(
-				userPassword, userDetails.getMember().getMpassword());
+				mpassword, userDetails.getMember().getMpassword());
 
 		// 스프링 시큐리티 인증 처리
 		if (checkResult) {
@@ -67,10 +67,10 @@ public class MemberController {
 		if (checkResult) { // 패스워드가 일치한 경우
 			// 로그인 성공시 --------------------------------------
 			String accessToken = jwtProvider.createAccessToken(
-					userId, userDetails.getMember().getMrole());
+					mid, userDetails.getMember().getMrole());
 			// JSON 응답 구성
 			map.put("message", "success");
-			map.put("userId", userId);
+			map.put("mid", mid);
 			map.put("accessToken", accessToken);
 		} else {
 			// 로그인 실패시 -------------------------------------

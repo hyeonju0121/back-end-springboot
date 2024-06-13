@@ -25,7 +25,10 @@ public class BoardService {
    }
    
    public Board getBoard(int bno) {
-      return boardsDao.selectByBno(bno);
+	   Board board = boardsDao.selectByBno(bno);
+	   boardsDao.updateBhitcount(bno);
+	   
+      return board;
    }
 
    public int update(Board board) {

@@ -92,6 +92,7 @@ public class BoardController {
 	/**
 	 * 게시물 단건 조회
 	 */
+	@PreAuthorize("hasAuthority('ROLE_USER')")
 	@GetMapping("/read/{bno}")
 	public Board read(@PathVariable int bno) {
 		Board board = boardService.getBoard(bno);
@@ -141,6 +142,7 @@ public class BoardController {
 	}
 
 	// 첨부파일 다운로드
+	@PreAuthorize("hasAuthority('ROLE_USER')")
 	@GetMapping("/battach/{bno}")
 	public void download(@PathVariable int bno, HttpServletResponse response) {
 		// 해당 게시물 가져오기 (첨부파일 battachdata 포함)

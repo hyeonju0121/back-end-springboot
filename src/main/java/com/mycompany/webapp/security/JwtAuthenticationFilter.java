@@ -41,11 +41,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		// 클라이언트에서 넘어온 access token 얻어오기
 		// jwt 토큰은 요청 헤더에 실려서 넘어옴
+		
+		// 요청 헤더에서 Accesstoken 얻기
 		String headerValue = request.getHeader("Authorization"); // 요청 헤더 이름
 
 		if (headerValue != null && headerValue.startsWith("Bearer")) {
 			accessToken = headerValue.substring(7); // "Bearer "
 			log.info("accessToken={}", accessToken);
+		}
+		
+		// 쿼리스트링으로 전달된 AccessToken 얻기 (요청 헤더에서 얻지 못했을 경우)
+		// <img src="/board/battach/10626?accessToken=xxx.yyyy.zzz">
+		if(accessToken == null) {
+			if(request.getParameter("accessToken") != null) {
+				accessToken = request.getParameter("accessToken");
+				log.info("accessToken={}", accessToken);
+			}
 		}
 		
 		// accessToken 이 null 이 아닐 경우, 유효성 검사 수행
